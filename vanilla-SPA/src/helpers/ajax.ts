@@ -22,6 +22,7 @@ export async function ajax(props: {
       $errorText.textContent = `Error ${err.status || 'Unknown'}: ${
         err.statusText || 'An error has ocurred.'
       }`
+
       $error.classList.add('error')
       $error.appendChild($errorText)
 

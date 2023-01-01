@@ -4,6 +4,7 @@ import { PostCard } from './PostCard'
 import { Post } from './Post'
 import { WpApiObject } from '../types/WpApiObject'
 import { SearchCard } from './SearchCard'
+import { ContactForm } from './ContactForm'
 
 //invokes the requests depending on the section of the content we are requesting.
 export async function Router() {
@@ -22,27 +23,27 @@ export async function Router() {
       url: api.POSTS,
       cbSuccess: posts => {
         posts.forEach((post: WpApiObject) => $posts.appendChild(PostCard(post)))
-        $loader.style.display = 'none'
       },
     })
   } else if (location.hash.includes('#/search')) {
     //todo
     const urlSearch = new URLSearchParams(location.hash.slice(8))
 
-    if (!urlSearch.get('search')) {
+    if (!urlSearch.get('search') && !localStorage.getItem('wpQuery')) {
       $sectionsH2.textContent = 'Search some posts!'
       $loader.style.display = 'none'
       return
     }
 
+    location.hash = '#/search?search=' + localStorage.getItem('wpQuery')
     $sectionsH2.textContent = 'Searching...'
-
+    $sectionsH2.remove()
     await ajax({
-      url: api.SEARCH + urlSearch.get('search'), // Esto lo puse asi solo para obtener los datos de los post
+      url: `${api.SEARCH}${
+        urlSearch.get('search') || localStorage.getItem('wpQuery')
+      }`,
       cbSuccess: async searchedPosts => {
-        const sP = searchedPosts as []
-        console.log(sP)
-        if (sP.length === 0) {
+        if (searchedPosts.length === 0) {
           const $p: HTMLParagraphElement = document.createElement('p'),
             $mark: HTMLElement = document.createElement('mark')
 
@@ -52,32 +53,30 @@ export async function Router() {
           $p.appendChild($mark)
 
           $posts.appendChild($p)
+          $loader.style.display = 'none'
         } else {
-          sP.forEach((post: WpApiObject) =>
+          $loader.style.display = 'block'
+          searchedPosts.forEach(async (post: unknown) =>
             $posts.appendChild(SearchCard(post))
           )
-
-          $loader.style.display = 'none'
         }
       },
     })
-
-    $sectionsH2.remove()
   } else if (location.hash.includes('#/contacts')) {
     //todo
-    $sectionsH2.textContent = 'Contacts Section'
+    $sectionsH2.remove()
+    $loader.style.display = 'none'
+    $posts.appendChild(ContactForm())
   } else {
     //todo
     $sectionsH2.remove()
     await ajax({
       //slice to delete "#/" at the beginning
       url: api.POST + '?slug=' + location.hash.slice(2),
-      cbSuccess: post => {
+      cbSuccess: (post: unknown) => {
         $posts.appendChild(Post(post[0]))
         $loader.style.display = 'none'
       },
     })
   }
-
-  $loader.style.display = 'none'
 }

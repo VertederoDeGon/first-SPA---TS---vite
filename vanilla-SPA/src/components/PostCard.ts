@@ -1,6 +1,6 @@
 import { WpApiObject } from '../types/WpApiObject'
 
-export function PostCard(post: WpApiObject): HTMLElement {
+export function PostCard(post: WpApiObject | unknown): HTMLElement {
   const $article: HTMLElement = document.createElement('article'),
     $img: HTMLImageElement = document.createElement('img'),
     $h2: HTMLElement = document.createElement('h2'),
@@ -18,7 +18,7 @@ export function PostCard(post: WpApiObject): HTMLElement {
 
   $img.alt = title.rendered
 
-  $h2.textContent = title.rendered
+  $h2.innerHTML = title.rendered
 
   $time.dateTime = post.date
   $time.textContent = `${new Date(post.date).toLocaleString()}`

@@ -1,6 +1,6 @@
 import { WpApiObject } from '../types/WpApiObject'
 
-export function PostCard(post: WpApiObject | unknown): HTMLElement {
+export function PostCard(post: WpApiObject): HTMLElement {
   const $article: HTMLElement = document.createElement('article'),
     $img: HTMLImageElement = document.createElement('img'),
     $h2: HTMLElement = document.createElement('h2'),
@@ -13,15 +13,15 @@ export function PostCard(post: WpApiObject | unknown): HTMLElement {
   $article.classList.add('post-card')
 
   $img.src =
-    _embedded['wp:featuredmedia'][0].source_url ||
-    post.jetpack_featured_media_url
+    _embedded!['wp:featuredmedia']![0].source_url ||
+    post.jetpack_featured_media_url!
 
-  $img.alt = title.rendered
+  $img.alt = title!.rendered!
 
-  $h2.innerHTML = title.rendered
+  $h2.innerHTML = title!.rendered!
 
-  $time.dateTime = post.date
-  $time.textContent = `${new Date(post.date).toLocaleString()}`
+  $time.dateTime = post.date!
+  $time.textContent = `${new Date(post.date!).toLocaleString()}`
 
   $a.href = '#/' + slug
   $a.textContent = 'View post'

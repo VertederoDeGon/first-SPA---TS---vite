@@ -1,6 +1,6 @@
 import { WpApiObject } from '../types/WpApiObject'
 
-export function SearchCard(searchedPost: WpApiObject | unknown) {
+export function SearchCard(searchedPost: WpApiObject) {
   const $article: HTMLElement = document.createElement('article'),
     $h2: HTMLElement = document.createElement('h2'),
     $p: HTMLParagraphElement = document.createElement('p'),
@@ -8,9 +8,10 @@ export function SearchCard(searchedPost: WpApiObject | unknown) {
 
   $article.classList.add('post-card')
 
-  $h2.innerHTML = searchedPost.title
+  $h2.innerHTML = searchedPost.title!
 
-  $a.href = '#/' + searchedPost._embedded.self[0].slug
+  if (searchedPost._embedded!.self![0].slug)
+    $a.href = '#/' + searchedPost._embedded!.self![0].slug
   $a.textContent = 'View publication'
 
   $p.style.display = 'block'

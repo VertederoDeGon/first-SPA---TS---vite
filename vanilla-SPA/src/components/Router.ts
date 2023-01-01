@@ -29,7 +29,7 @@ export async function Router() {
     //todo
     const urlSearch = new URLSearchParams(location.hash.slice(8))
 
-    if (!urlSearch.get('search') && !localStorage.getItem('wpQuery')) {
+    if (!localStorage.getItem('wpQuery')) {
       $sectionsH2.textContent = 'Search some posts!'
       $loader.style.display = 'none'
       return
@@ -56,7 +56,7 @@ export async function Router() {
           $loader.style.display = 'none'
         } else {
           $loader.style.display = 'block'
-          searchedPosts.forEach(async (post: unknown) =>
+          searchedPosts.forEach(async post =>
             $posts.appendChild(SearchCard(post))
           )
         }
@@ -73,7 +73,7 @@ export async function Router() {
     await ajax({
       //slice to delete "#/" at the beginning
       url: api.POST + '?slug=' + location.hash.slice(2),
-      cbSuccess: (post: unknown) => {
+      cbSuccess: (post: WpApiObject[]) => {
         $posts.appendChild(Post(post[0]))
         $loader.style.display = 'none'
       },

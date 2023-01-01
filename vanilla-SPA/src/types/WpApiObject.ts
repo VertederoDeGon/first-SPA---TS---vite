@@ -1,6 +1,17 @@
 //prettier-ignore
-export type WpApiObject =
-  { [key: number]: any } & any[] & (number | string) & unknown
+export type WpApiObject = {
+  title?: string & {
+    rendered?: string
+  },
+  content?: {rendered?: string}
+  date?: string
+  _embedded?: {
+    self?: [{slug?: string}],
+    'wp:featuredmedia'?: [{source_url?: string}],
+  },
+  slug?: string,
+  jetpack_featured_media_url?: string,
+} & []
 
 //class from https://stackoverflow.com/questions/38324949/error-ts2339-property-x-does-not-exist-on-type-y
 /*

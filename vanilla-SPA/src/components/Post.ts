@@ -12,12 +12,12 @@ export function Post(post: WpApiObject): HTMLElement {
 
   $postPage.classList.add('post-page')
 
-  $h2.textContent = title.rendered
+  $h2.textContent = title!.rendered!
 
-  $time.dateTime = post.date
-  $time.textContent = new Date(post.date).toLocaleString()
+  $time.dateTime = post.date!
+  $time.textContent = new Date(post.date!).toLocaleString()
 
-  $article.innerHTML = content.rendered
+  $article.innerHTML = content!.rendered!
 
   $aside.appendChild($h2)
   $aside.appendChild($time)

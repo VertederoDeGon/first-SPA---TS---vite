@@ -1,7 +1,6 @@
 import wp_api from '../api/wp_api'
 import { PostCard } from '../components/PostCard'
 import { SearchCard } from '../components/SearchCard'
-import { WpApiObject } from '../types/WpApiObject'
 import { ajax } from './ajax'
 /**
  * @param Component High Order Component (HOC)
@@ -69,10 +68,13 @@ export async function infiniteScroll(lastPost: Element): Promise<void> {
     apiURI = wp_api.POSTS + '&page=' + wp_api.page
   } else if (location.hash.includes('#/search')) {
     apiURI = wp_api.SEARCH + wpQuery + '&page=' + wp_api.page
+  } else if (location.hash.includes('#/contacts')) {
+    observer.disconnect()
+    return
   } else {
     observer.disconnect()
     return
   }
 
-  if (lastPost) observer.observe(lastPost)
+  if (lastPost && lastPost instanceof Element) observer.observe(lastPost)
 }
